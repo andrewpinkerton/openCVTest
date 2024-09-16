@@ -25,7 +25,7 @@ void detectParkingSpaces(Mat& image) {
 }
 
 int main() {
-    string image_path = "C:/Users/viper/Downloads/parkinglot.png";
+    string image_path = "images/parking01.jpg";
 
     Mat image = imread(image_path, IMREAD_COLOR);
 
