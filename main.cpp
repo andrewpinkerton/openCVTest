@@ -52,7 +52,7 @@ void detectParkingSpaces(const Mat& image) {
         }
     }
 
-    cout << "Open parking spaces detected: " << openSpaces << endl;
+    cout << "Open parking spaces detected: " << openSpaces << endl << endl << endl;
 
     imshow("Detected Parking Spaces", result);
     waitKey(0);
