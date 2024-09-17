@@ -44,7 +44,7 @@ void detectAndDrawRectangles(Mat& image, const Mat& mask) {
 
 int main() {
     string image_path = "images/parking01.jpg"; // Change to the original image path
-    string mask_path = "images/parking01mask.jpg"; // Path to the mask image
+    string mask_path = "images/mask01.jpg"; // Path to the mask image
 
     Mat image = imread(image_path, IMREAD_COLOR);
     Mat mask = imread(mask_path, IMREAD_COLOR);
