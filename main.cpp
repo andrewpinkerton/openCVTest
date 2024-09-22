@@ -75,7 +75,6 @@ void detectAndDrawRectangles(Mat& image, const Mat& mask) {
     }
 
     int rect_count = 0;
-    Range grayRange(100, 200); // Example range for gray pixels
 
     // Draw rectangles around each contour on the original image
     for (const auto& contour : contours) {
@@ -83,20 +82,22 @@ void detectAndDrawRectangles(Mat& image, const Mat& mask) {
             Rect bounding_rect = boundingRect(contour);
             rect_count++;
 
-            // Check for colors within the rectangle
             if (checkColorsInRectangle(image, bounding_rect, rect_count) > 370)
             {
                 rectangle(image, bounding_rect, Scalar(0, 0, 255), 1); // Red color
             }
 
             // Draw the 4th rectangle in red, others in green
-            if ((rect_count > 63 && rect_count <= 94 && rect_count != 92) || (rect_count >= 109 && rect_count <= 138)) {
+            if ((rect_count > 63 && rect_count <= 94 && rect_count != 119) || (rect_count >= 109 && rect_count <= 138)) {
                 // Check for colors within the rectangle
-                if (checkColorsInRectangle(image, bounding_rect, rect_count) > 310)
-                {
-                    rectangle(image, bounding_rect, Scalar(0, 0, 255), 1); // Red color
-                }
+
+                //if (checkColorsInRectangle(image, bounding_rect, rect_count) > 370)
+                //{
+                //    rectangle(image, bounding_rect, Scalar(0, 0, 255), 1); // Red color
+                //}
+
             }
+
             else {
                 //rectangle(image, bounding_rect, Scalar(0, 255, 0), 2); // Green color
             }
