@@ -1,12 +1,11 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/opencv.hpp>
 #include <iostream>
 
 using namespace cv;
 using namespace std;
-
-#include <opencv2/opencv.hpp>
 
 int checkColorsInRectangle(Mat& image, const Rect& rect, int rect_count) {
     // Define the color ranges to check for gray
