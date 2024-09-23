@@ -10,7 +10,7 @@ using namespace std;
 
 int checkColorsInRectangle(Mat& image, const Rect& rect, int rect_count) {
     // Define the color ranges to check for gray
-    Scalar lower_color(0, 0, 120);   // Lower bound for gray (low saturation, medium brightness)
+    Scalar lower_color(0, 0, 110);   // Lower bound for gray (hue, saturation, value)
     Scalar upper_color(180, 30, 170); // Upper bound for gray
 
     // Create a mask for the area within the rectangle
@@ -82,25 +82,26 @@ void detectAndDrawRectangles(Mat& image, const Mat& mask) {
             Rect bounding_rect = boundingRect(contour);
             rect_count++;
 
-            if (checkColorsInRectangle(image, bounding_rect, rect_count) > 370)
+            if (checkColorsInRectangle(image, bounding_rect, rect_count) > 360)
             {
-                rectangle(image, bounding_rect, Scalar(0, 0, 255), 1); // Red color
+                //rectangle(image, bounding_rect, Scalar(0, 255, 0), 1); // Green color
+            }
+            else if ((checkColorsInRectangle(image, bounding_rect, rect_count) < 360))
+            {
+                rectangle(image, bounding_rect, Scalar(0, 0, 255), 2); // Red color
             }
 
-            // Draw the 4th rectangle in red, others in green
-            if ((rect_count > 63 && rect_count <= 94 && rect_count != 119) || (rect_count >= 109 && rect_count <= 138)) {
-                // Check for colors within the rectangle
+            //// Draw the 4th rectangle in red, others in green
+            //if ((rect_count > 63 && rect_count <= 94 && rect_count != 119) || (rect_count >= 109 && rect_count <= 138)) {
+            //    // Check for colors within the rectangle
 
-                //if (checkColorsInRectangle(image, bounding_rect, rect_count) > 370)
-                //{
-                //    rectangle(image, bounding_rect, Scalar(0, 0, 255), 1); // Red color
-                //}
+            //    if (checkColorsInRectangle(image, bounding_rect, rect_count) > 370)
+            //    {
+            //        rectangle(image, bounding_rect, Scalar(0, 0, 255), 1); // Red color
+            //    }
 
-            }
+            //}
 
-            else {
-                //rectangle(image, bounding_rect, Scalar(0, 255, 0), 2); // Green color
-            }
 
             // Add the rectangle count as text on the image
             string count_text = to_string(rect_count);
@@ -113,8 +114,8 @@ void detectAndDrawRectangles(Mat& image, const Mat& mask) {
 }
 
 int main() {
-    string image_path = "images/parking01.jpg"; // Change to the original image path
-    string mask_path = "images/mask01.jpg"; // Path to the mask image
+    string image_path = "images/parking02.jpg"; // Change to the original image path
+    string mask_path = "images/mask02.jpg"; // Path to the mask image
 
     Mat image = imread(image_path, IMREAD_COLOR);
     Mat mask = imread(mask_path, IMREAD_COLOR);
