@@ -1,11 +1,12 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/opencv.hpp>
 #include <iostream>
+#include <opencv2/opencv.hpp>
 
 using namespace cv;
 using namespace std;
+
 
 int checkColorsInRectangle(Mat& image, const Rect& rect, int rect_count) {
     // Define the color ranges to check for gray
@@ -27,7 +28,7 @@ int checkColorsInRectangle(Mat& image, const Rect& rect, int rect_count) {
 
     // Check if there are any pixels of the desired color
     if (countNonZero(mask) > 0) {
-        
+
         // Change the detected gray pixels to blue in the original image
         for (int y = 0; y < roi.rows; ++y) {
             for (int x = 0; x < roi.cols; ++x) {
@@ -42,8 +43,55 @@ int checkColorsInRectangle(Mat& image, const Rect& rect, int rect_count) {
         cout << "Pixels detected: " << blue_pixel_count << endl;
         return blue_pixel_count;
 
-    } else {
+    }
+    else {
         cout << "No desired color found in rectangle at: " << rect << endl;
+        return 0;
+    }
+}
+
+int checkShadows(Mat& image, const Rect& rect, int rect_count) {
+    // Define the color ranges to check for gray
+    Scalar lower_color(115, 20, 40);   // Lower bound for gray
+    Scalar upper_color(160, 60, 75); // Upper bound for gray
+
+    // Create a mask for the area within the rectangle
+    Mat roi = image(rect);
+
+    // Convert the ROI to HSV for better color detection
+    Mat hsv_roi;
+    cvtColor(roi, hsv_roi, COLOR_BGR2HSV);
+
+    // Threshold the HSV image to get only the desired colors
+    Mat mask;
+    inRange(hsv_roi, lower_color, upper_color, mask);
+
+    int gray_pixel_count = 0;
+
+    // Check if there are any pixels of the desired color
+    if (countNonZero(mask) > 0) {
+        // Change the detected gray pixels to blue in the original image
+        for (int y = 0; y < roi.rows; ++y) {
+            for (int x = 0; x < roi.cols; ++x) {
+                if (mask.at<uchar>(y, x) > 0) {
+                    gray_pixel_count++;
+                    //image.at<Vec3b>(rect.y + y, rect.x + x) = Vec3b(0, 255, 255); // Set to blue (BGR format)
+                   /* if (rect_count == 358)
+                    {
+                        Vec3b hsv_pixel = hsv_roi.at<Vec3b>(y, x);
+                        cout << "Detected gray pixel at (" << rect.x + x << ", " << rect.y + y << ") with HSV: (" << (int)hsv_pixel[0] << ", " << (int)hsv_pixel[1] << ", " << (int)hsv_pixel[2] << ")" << endl;
+                    }*/
+                }
+            }
+        }
+
+        cout << "Gray color found in rectangle at: " << rect_count << endl;
+        cout << "Shadow Pixels detected: " << gray_pixel_count << endl;
+        return gray_pixel_count;
+
+    }
+    else {
+        cout << "No gray color found in rectangle at: " << rect << endl;
         return 0;
     }
 }
@@ -81,26 +129,20 @@ void detectAndDrawRectangles(Mat& image, const Mat& mask) {
             Rect bounding_rect = boundingRect(contour);
             rect_count++;
 
-            if (checkColorsInRectangle(image, bounding_rect, rect_count) > 360)
+            int color_count = checkColorsInRectangle(image, bounding_rect, rect_count);
+
+            if (color_count > 360)
             {
-                //rectangle(image, bounding_rect, Scalar(0, 255, 0), 1); // Green color
+                // rectangle(image, bounding_rect, Scalar(0, 255, 0), 1); // Green color
             }
-            else if ((checkColorsInRectangle(image, bounding_rect, rect_count) < 360))
+            else if (color_count < 360)
             {
-                rectangle(image, bounding_rect, Scalar(0, 0, 255), 2); // Red color
+                rectangle(image, bounding_rect, Scalar(0, 0, 255), 1); // Red color
+                if (checkShadows(image, bounding_rect, rect_count) > 215)
+                {
+                    rectangle(image, bounding_rect, Scalar(0, 255, 255), 2); // Yellow color
+                }
             }
-
-            //// Draw the 4th rectangle in red, others in green
-            //if ((rect_count > 63 && rect_count <= 94 && rect_count != 119) || (rect_count >= 109 && rect_count <= 138)) {
-            //    // Check for colors within the rectangle
-
-            //    if (checkColorsInRectangle(image, bounding_rect, rect_count) > 370)
-            //    {
-            //        rectangle(image, bounding_rect, Scalar(0, 0, 255), 1); // Red color
-            //    }
-
-            //}
-
 
             // Add the rectangle count as text on the image
             string count_text = to_string(rect_count);
