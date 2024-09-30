@@ -138,7 +138,7 @@ void detectAndDrawRectangles(Mat& image, const Mat& mask) {
             else if (color_count < 360)
             {
                 rectangle(image, bounding_rect, Scalar(0, 0, 255), 1); // Red color
-                if (checkShadows(image, bounding_rect, rect_count) > 215)
+                if (checkShadows(image, bounding_rect, rect_count) >= 175)
                 {
                     rectangle(image, bounding_rect, Scalar(0, 255, 255), 2); // Yellow color
                 }
